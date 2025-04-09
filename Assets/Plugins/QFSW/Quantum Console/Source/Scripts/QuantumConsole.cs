@@ -247,7 +247,7 @@ namespace QFSW.QC
                     OnStateChange?.Invoke();
                     _consoleInput.interactable = true;
                     if (_inputPlaceholderText) { _inputPlaceholderText.text = _localization.EnterCommand; }
-                    OverrideConsoleInput(string.Empty);
+                    OverrideConsoleInput(string.Empty, _focusOnActivate);
 
                     if (_isGeneratingTable)
                     {
@@ -509,6 +509,7 @@ namespace QFSW.QC
         /// </summary>
         public void FocusConsoleInput()
         {
+            Debug.Log("FocusConsoleInput");
             _consoleInput.Select();
             _consoleInput.caretPosition = _consoleInput.text.Length;
             _consoleInput.selectionAnchorPosition = _consoleInput.text.Length;
