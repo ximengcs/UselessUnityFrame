@@ -79,20 +79,18 @@ namespace QFSW.QC.FloatButtons
         private void Start()
         {
             console = QuantumConsole.Instance;
-            console.OnDeactivate += ConsoleDeactiveHandler;
+            console.OnDeactivate += Show;
+            console.OnActivate += Hide;
             Application.logMessageReceivedThreaded += LogHandler;
+            ResetValues();
             UpdatePosition(false);
         }
 
         private void OnDestroy()
         {
-            console.OnDeactivate -= ConsoleDeactiveHandler;
+            console.OnDeactivate -= Show;
+            console.OnActivate -= Hide;
             Application.logMessageReceivedThreaded -= LogHandler;
-        }
-
-        private void ConsoleDeactiveHandler()
-        {
-            Show();
         }
 
         private void LogHandler(string condition, string stackTrace, LogType type)
@@ -115,10 +113,13 @@ namespace QFSW.QC.FloatButtons
 
         private void LateUpdate()
         {
-            NewLogsArrived(thisInfoCount, thisWarningCount, thisErrorCount);
-            thisInfoCount = 0;
-            thisWarningCount = 0;
-            thisErrorCount = 0;
+            if (thisInfoCount > 0 || thisWarningCount > 0 || thisErrorCount > 0)
+            {
+                NewLogsArrived(thisInfoCount, thisWarningCount, thisErrorCount);
+                thisInfoCount = 0;
+                thisWarningCount = 0;
+                thisErrorCount = 0;
+            }
         }
 
         public void NewLogsArrived(int newInfo, int newWarning, int newError)
@@ -145,8 +146,10 @@ namespace QFSW.QC.FloatButtons
                 backgroundImage.color = alertColorError;
             else if (newWarningCount > 0)
                 backgroundImage.color = alertColorWarning;
-            else
+            else if (newInfoCount > 0)
                 backgroundImage.color = alertColorInfo;
+            else
+                backgroundImage.color = normalColor;
         }
 
         private void ResetValues()
@@ -186,8 +189,8 @@ namespace QFSW.QC.FloatButtons
             if (!console.IsActive)
             {
                 console.Activate();
-                Hide();
             }
+            ResetValues();
         }
 
         // Hides the log window and shows the popup

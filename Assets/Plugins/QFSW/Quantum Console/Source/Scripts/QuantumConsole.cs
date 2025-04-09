@@ -509,7 +509,6 @@ namespace QFSW.QC
         /// </summary>
         public void FocusConsoleInput()
         {
-            Debug.Log("FocusConsoleInput");
             _consoleInput.Select();
             _consoleInput.caretPosition = _consoleInput.text.Length;
             _consoleInput.selectionAnchorPosition = _consoleInput.text.Length;
