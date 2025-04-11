@@ -1023,7 +1023,6 @@ namespace QFSW.QC
                     if (Instance == null)
                     {
                         Instance = this;
-                        DontDestroyOnLoad(gameObject);
                     }
                     else if (Instance != this)
                     {

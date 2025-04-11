@@ -1,9 +1,11 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UselessFrame.Runtime;
+using UselessFrameUnity.Attributes;
 
 namespace TestGame
 {
+    [CustomModule]
     public class TestModule : ModuleBase, IUpdater
     {
         protected override void OnInit(object param)
