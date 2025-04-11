@@ -53,6 +53,7 @@ namespace QFSW.QC.FloatButtons
 
         private bool isPopupBeingDragged = false;
         private Vector2 normalizedPosition;
+        private FpsCounter fpsCounter;
 
         // Coroutines for simple code-based animations
         private IEnumerator moveToPosCoroutine = null;
