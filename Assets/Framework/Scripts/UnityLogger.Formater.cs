@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace UnityXFrame.Core.Diagnotics
 {
-    public partial class Logger
+    public partial class UnityLogger
     {
         private class Formater
         {

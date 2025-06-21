@@ -6,12 +6,12 @@ using UselessFrame.NewRuntime.Fiber;
 
 namespace UnityXFrame.Core.Diagnotics
 {
-    public partial class Logger : UselessFrame.NewRuntime.ILogger
+    public partial class UnityLogger : UselessFrame.NewRuntime.ILogger
     {
         private bool m_MustRegister;
         private Formater m_Formater;
 
-        public Logger()
+        public UnityLogger()
         {
             m_MustRegister = false;
             m_Formater = new Formater();

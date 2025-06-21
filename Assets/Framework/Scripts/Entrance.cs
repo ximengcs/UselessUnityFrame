@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityXFrame.Core.Diagnotics;
 using UselessFrame.NewRuntime;
 using UselessFrame.Runtime;
 using UselessFrame.Runtime.Configs;
@@ -23,6 +24,7 @@ namespace UselessFrameUnity
             InitApplicationSetting();
             InitFrameCore();
             X.Initialize(new XSetting());
+            X.SystemLog.AddLogger<UnityLogger>();
         }
 
         private void InitFrameCore()
