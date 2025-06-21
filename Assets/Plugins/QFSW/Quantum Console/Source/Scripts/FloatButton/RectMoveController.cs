@@ -31,6 +31,7 @@ namespace QFSW.QC.FloatButtons
         {
             Vector2 localPoint = eventData.position - _lastPos;
             localPoint.x = 0;
+            localPoint.y *= canvasTf.sizeDelta.y / Screen.height;
             localPoint += target.anchoredPosition;
             localPoint.y = Mathf.Max(localPoint.y, _orgPos.y);
             target.anchoredPosition = localPoint;

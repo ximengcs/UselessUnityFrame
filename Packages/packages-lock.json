@@ -65,7 +65,7 @@
       }
     },
     "com.unity.render-pipelines.universal": {
-      "version": "12.1.11",
+      "version": "12.1.14",
       "depth": 0,
       "source": "builtin",
       "dependencies": {

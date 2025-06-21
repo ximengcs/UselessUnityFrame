@@ -12,9 +12,6 @@ namespace QFSW.QC.FloatButtons
 
         private RectTransform popupTransform;
 
-        // Dimensions of the popup divided by 2
-        private Vector2 halfSize;
-
         // Background image that will change color to indicate an alert
         private Image backgroundImage;
 
@@ -53,7 +50,6 @@ namespace QFSW.QC.FloatButtons
 
         private bool isPopupBeingDragged = false;
         private Vector2 normalizedPosition;
-        private FpsCounter fpsCounter;
 
         // Coroutines for simple code-based animations
         private IEnumerator moveToPosCoroutine = null;
@@ -67,9 +63,6 @@ namespace QFSW.QC.FloatButtons
             canvasGroup = GetComponent<CanvasGroup>();
 
             normalColor = backgroundImage.color;
-
-            halfSize = popupTransform.sizeDelta * 0.5f;
-
             Vector2 pos = popupTransform.anchoredPosition;
             if (pos.x != 0f || pos.y != 0f)
                 normalizedPosition = pos.normalized; // Respect the initial popup position set in the prefab
@@ -252,7 +245,6 @@ namespace QFSW.QC.FloatButtons
         public void UpdatePosition(bool immediately)
         {
             Vector2 canvasRawSize = canvasTf.rect.size;
-
             // Calculate safe area bounds
             float canvasWidth = canvasRawSize.x;
             float canvasHeight = canvasRawSize.y;
@@ -293,13 +285,13 @@ namespace QFSW.QC.FloatButtons
             float vertDistance = Mathf.Min(distToBottom, distToTop);
 
             // Find the nearest edge's safe area coordinates
+            Vector2 halfSize = popupTransform.sizeDelta * 0.5f;
             if (horDistance < vertDistance)
             {
                 if (distToLeft < distToRight)
                     pos = new Vector2(halfSize.x, pos.y);
                 else
                     pos = new Vector2(canvasWidth - halfSize.x, pos.y);
-
                 pos.y = Mathf.Clamp(pos.y, halfSize.y, canvasHeight - halfSize.y);
             }
             else
@@ -308,12 +300,10 @@ namespace QFSW.QC.FloatButtons
                     pos = new Vector2(pos.x, halfSize.y);
                 else
                     pos = new Vector2(pos.x, canvasHeight - halfSize.y);
-
                 pos.x = Mathf.Clamp(pos.x, halfSize.x, canvasWidth - halfSize.x);
             }
 
             pos -= canvasRawSize * 0.5f;
-
             normalizedPosition.Set(pos.x / canvasWidth, pos.y / canvasHeight);
 
             // Safe area's bottom left coordinates are added to pos only after normalizedPosition's value
