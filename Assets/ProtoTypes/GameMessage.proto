@@ -1,0 +1,5 @@
+
+message TextureTest
+{
+    required bytes data = 1;
+}
