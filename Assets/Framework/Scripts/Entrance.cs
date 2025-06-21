@@ -66,6 +66,7 @@ namespace UselessFrameUnity
         private void OnDestroy()
         {
             _core.Destroy();
+            X.Shutdown();
         }
     }
 }
