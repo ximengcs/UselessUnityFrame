@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UselessFrame.NewRuntime;
 using UselessFrame.Runtime;
 using UselessFrame.Runtime.Configs;
 using UselessFrame.Runtime.Extensions;
@@ -21,6 +22,7 @@ namespace UselessFrameUnity
         {
             InitApplicationSetting();
             InitFrameCore();
+            X.Initialize(new XSetting());
         }
 
         private void InitFrameCore()
@@ -55,6 +57,7 @@ namespace UselessFrameUnity
 
         private void Update()
         {
+            X.Update(Time.deltaTime);
             _core.Trigger<IUpdater>(Time.deltaTime);
         }
 
