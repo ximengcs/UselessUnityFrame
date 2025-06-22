@@ -77,7 +77,7 @@ namespace QFSW.QC.FloatButtons
             console.OnActivate += Hide;
             Application.logMessageReceivedThreaded += LogHandler;
             ResetValues();
-            UpdatePosition(false);
+            UpdatePosition(true);
         }
 
         private void OnDestroy()
