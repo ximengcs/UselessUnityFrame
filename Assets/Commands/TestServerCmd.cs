@@ -52,7 +52,7 @@ namespace Game.Commands
             connection.ReceiveMessageEvent += ReceiveMessage;
         }
 
-        private void ReceiveMessage(IMessageResult msg)
+        private void ReceiveMessage(MessageResult msg)
         {
             Debug.Log($"receive message {msg.MessageType.Name}");
             if (msg.Message is TextureTest texMsg)
