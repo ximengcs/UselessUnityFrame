@@ -22,9 +22,9 @@ namespace UselessFrameUnity
         private void Start()
         {
             InitApplicationSetting();
-            InitFrameCore();
             X.Initialize(new XSetting());
             X.SystemLog.AddLogger<UnityLogger>();
+            InitFrameCore();
         }
 
         private void InitFrameCore()
