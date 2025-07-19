@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityXFrame.Core.Diagnotics;
 using UselessFrame.NewRuntime;
+using UselessFrame.NewRuntime.Entities;
 using UselessFrame.Runtime;
 using UselessFrame.Runtime.Configs;
 using UselessFrame.Runtime.Extensions;
