@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using UselessFrame.NewRuntime;
 using UselessFrame.NewRuntime.Entities;
 using UselessFrame.NewRuntime.Scenes;
@@ -23,6 +24,7 @@ namespace TestGame
             {
                 var attr = (ComponentViewAttribute)X.Type.GetAttribute(type, typeof(ComponentViewAttribute));
                 _viewMaps[attr.Type] = type;
+                Debug.LogWarning($"OnCreateComponent add {attr.Type.Name} {type.Name}");
             }
 
             _world = world;

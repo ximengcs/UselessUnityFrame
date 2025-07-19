@@ -8,12 +8,7 @@ namespace TestGame
     {
         public void OnAwake(TransformComponent comp)
         {
-            Debug.Log($"TransformAwakeSystem OnAwake");
-        }
-
-        public void OnAwake(EntityComponent comp)
-        {
-            throw new System.NotImplementedException();
+            Debug.Log($"TransformAwakeSystem OnAwake {comp.Position}");
         }
     }
 }

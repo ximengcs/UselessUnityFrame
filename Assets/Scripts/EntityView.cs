@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using UnityEngine;
 using UselessFrame.NewRuntime.Entities;
 
 namespace TestGame
@@ -10,11 +11,13 @@ namespace TestGame
         private EntityView _parent;
         private SceneView _scene;
         private Dictionary<long, EntityView> _children;
-        private UnityEngine.GameObject _inst;
+        private GameObject _inst;
 
         public long Id => _id;
 
         public EntityView Parent => _parent;
+
+        public GameObject GameObject => _inst;
 
         public SceneView Scene
         {
