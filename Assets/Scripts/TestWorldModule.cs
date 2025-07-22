@@ -1,6 +1,6 @@
 ﻿
 using UselessFrame.NewRuntime;
-using UselessFrame.NewRuntime.Worlds;
+using UselessFrame.NewRuntime.ECS;
 using UselessFrame.Runtime;
 using UselessFrameUnity.Attributes;
 

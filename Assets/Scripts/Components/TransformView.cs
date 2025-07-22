@@ -1,10 +1,11 @@
 ﻿
 using UnityEngine;
-using UselessFrame.NewRuntime.Entities;
+using UselessFrame.NewRuntime.ECS;
+
 
 namespace TestGame
 {
-    [ComponentView(typeof(TransformComponent))]
+    [ComponentOf(typeof(TransformComponent))]
     public class TransformView : EntityComponent
     {
         private EntityView _entityView;
@@ -15,6 +16,12 @@ namespace TestGame
         {
             base.OnInit();
             _entityView = Entity.GetComponent<EntityView>();
+        }
+
+        protected override void OnDispose()
+        {
+            base.OnDispose();
+            Debug.LogWarning($"tf view dispose {GetHashCode()}");
         }
     }
 }
