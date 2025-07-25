@@ -14,9 +14,9 @@ namespace TestGame
         protected override void OnInit(object param)
         {
             base.OnInit(param);
-            X.World.SetHelper(new ClientWorldHelper());
-            _world = X.World.Create();
+            _world = X.World.Create(WorldSetting.Client(8888));
             _world.SetHelper(new CreateWorldObjectHelper());
+            TestMove.Instance.world = _world;
         }
     }
 }

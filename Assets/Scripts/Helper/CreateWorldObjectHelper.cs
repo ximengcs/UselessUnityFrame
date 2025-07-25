@@ -42,7 +42,7 @@ namespace TestGame
 
         public void OnCreateEntity(Entity entity)
         {
-            X.SystemLog.Debug($"OnCreateEntity {entity.GetType().Name} {entity.Scene == null} {entity.Id}");
+            X.Log.Debug($"OnCreateEntity {entity.GetType().Name} {entity.Scene == null} {entity.Id}");
             if (_entityViewMaps.TryGetValue(entity.GetType(), out Type viewType))
             {
                 entity.GetOrAddComponent(viewType);
@@ -52,7 +52,7 @@ namespace TestGame
         public void OnCreateComponent(EntityComponent component)
         {
             if (component.Entity.IsDisposed) return;
-            X.SystemLog.Debug($"OnCreateComponent {component.Entity.Id} {component.GetType().Name}");
+            X.Log.Debug($"OnCreateComponent {component.Entity.Id} {component.GetType().Name}");
             if (_compViewMaps.TryGetValue(component.GetType(), out Type viewType))
             {
                 component.Entity.GetOrAddComponent(viewType);
@@ -67,7 +67,7 @@ namespace TestGame
         public void OnDestroyComponent(EntityComponent component)
         {
             if (component.Entity.IsDisposed) return;
-            X.SystemLog.Debug($"OnDestroyComponent {component.GetHashCode()} {component.Entity.Id} {component.GetType().Name}");
+            X.Log.Debug($"OnDestroyComponent {component.GetHashCode()} {component.Entity.Id} {component.GetType().Name}");
             if (_compViewMaps.TryGetValue(component.GetType(), out Type viewType))
             {
                 component.Entity.RemoveComponent(viewType);
@@ -76,7 +76,7 @@ namespace TestGame
 
         public void OnDestroyEntity(Entity entity)
         {
-            X.SystemLog.Debug($"OnDestroyEntity {entity.GetType().Name} {entity.Id}");
+            X.Log.Debug($"OnDestroyEntity {entity.GetType().Name} {entity.Id}");
         }
     }
 }

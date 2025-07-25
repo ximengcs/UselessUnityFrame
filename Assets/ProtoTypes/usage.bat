@@ -1,1 +1,0 @@
- .\protoc.exe .\GameMessage.proto  --csharp_out=./

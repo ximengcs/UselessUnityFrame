@@ -3,51 +3,29 @@ using UnityEngine;
 using UnityXFrame.Core.Diagnotics;
 using UselessFrame.NewRuntime;
 using UselessFrame.Runtime;
-using UselessFrame.Runtime.Configs;
-using UselessFrame.Runtime.Extensions;
-using UselessFrame.Runtime.Types;
 using UselessFrameUnity.Attributes;
 
 namespace UselessFrameUnity
 {
     public class Entrance : MonoBehaviour
     {
-        private IFrameCore _core;
-
         private void Awake()
         {
             GameObject.DontDestroyOnLoad(this);
         }
 
-        private void Start()
+        private async void Start()
         {
             InitApplicationSetting();
-            X.Initialize(new XSetting());
-            X.SystemLog.AddLogger<UnityLogger>();
-            InitFrameCore();
-        }
-
-        private void InitFrameCore()
-        {
-            _core = FrameManager.Create(FrameConfig.Default);
-            InitFrameModule();
-            InitCustomModule();
-            _core.AddHandler(typeof(UpdateHandler));
-            _core.Start();
-        }
-
-        private void InitFrameModule()
-        {
-            ITypeCollection collection = _core.TypeSystem.GetOrNewWithAttr(typeof(FrameModuleAttribute));
-            foreach (Type type in collection)
-                _core.AddModule(type);
-        }
-
-        private void InitCustomModule()
-        {
-            ITypeCollection collection = _core.TypeSystem.GetOrNewWithAttr(typeof(CustomModuleAttribute));
-            foreach (Type type in collection)
-                _core.AddModule(type);
+            XSetting setting = new XSetting();
+            setting.Loggers = new[] { typeof(UnityLogger) };
+            setting.ModuleAttributes = new[] 
+            { 
+                typeof(FrameModuleAttribute),
+                typeof(CustomModuleAttribute),
+            };
+            await X.Initialize(setting);
+            X.Module.AddHandler<UpdateHandler>();
         }
 
         private void InitApplicationSetting()
@@ -60,12 +38,10 @@ namespace UselessFrameUnity
         private void Update()
         {
             X.Update(Time.deltaTime);
-            _core.Trigger<IUpdater>(Time.deltaTime);
         }
 
         private void OnDestroy()
         {
-            _core.Destroy();
             X.Shutdown();
         }
     }

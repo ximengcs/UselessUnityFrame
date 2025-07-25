@@ -6,7 +6,7 @@ using UselessFrameUnity.Attributes;
 namespace TestGame
 {
     [CustomModule]
-    public class TestModule : ModuleBase, IUpdater
+    public class TestModule : ModuleBase, IModuleUpdater
     {
         protected override void OnInit(object param)
         {
