@@ -30,5 +30,10 @@ namespace TestGame
         {
 
         }
+
+        public async void Te()
+        {
+            await UniTask.CompletedTask;
+        }
     }
 }
