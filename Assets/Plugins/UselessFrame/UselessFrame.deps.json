@@ -9,11 +9,11 @@
     ".NETStandard,Version=v2.1/": {
       "UselessFrame/1.0.0": {
         "dependencies": {
-          "CsvHelper": "1.0.0",
           "Google.Protobuf": "3.31.1",
           "IdGen": "1.0.0.0",
           "MemoryPack.Core": "1.0.0.0",
           "MemoryPack": "1.0.0.0",
+          "Newtonsoft.Json": "13.0.0.0",
           "QuadTrees": "1.0.0.0",
           "System.CommandLine": "42.42.42.42",
           "UniTask": "1.0.0.0",
@@ -72,14 +72,6 @@
           }
         }
       },
-      "CsvHelper/1.0.0": {
-        "runtime": {
-          "CsvHelper.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          }
-        }
-      },
       "IdGen/1.0.0.0": {
         "runtime": {
           "IdGen.dll": {
@@ -101,6 +93,14 @@
           "MemoryPack.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Newtonsoft.Json/13.0.0.0": {
+        "runtime": {
+          "Newtonsoft.Json.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.3.27908"
           }
         }
       },
@@ -179,11 +179,6 @@
       "path": "system.runtime.compilerservices.unsafe/4.5.2",
       "hashPath": "system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512"
     },
-    "CsvHelper/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
     "IdGen/1.0.0.0": {
       "type": "reference",
       "serviceable": false,
@@ -195,6 +190,11 @@
       "sha512": ""
     },
     "MemoryPack/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Newtonsoft.Json/13.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
