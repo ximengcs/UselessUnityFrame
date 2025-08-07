@@ -1,23 +1,17 @@
 using UnityEngine;
 using UselessFrame.NewRuntime;
-using UselessFrame.Runtime.Observable;
-using UselessFrame.Runtime.Pools;
 
 namespace UselessFrame.UIElements
 {
-    public interface IUI : IContainer, IPoolObject
+    public interface IUI : IContainer<IUI>
     {
         RectTransform RootRect { get; }
 
-        int Layer { get; }
+        int Layer { get; set; }
 
-        void Open();
+        IUIHandle Open();
 
-        void Close();
-
-        UIHandle OpenAsync();
-
-        UIHandle CloseAsync();
+        IUIHandle Close();
 
         IUIGroup Group { get; }
     }

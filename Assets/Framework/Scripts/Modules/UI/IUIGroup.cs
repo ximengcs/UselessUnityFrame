@@ -17,11 +17,6 @@ namespace UselessFrame.UIElements
         bool IsOpen { get; }
 
         /// <summary>
-        /// 组内UI整体不透明度
-        /// </summary>
-        float Alpha { get; set; }
-
-        /// <summary>
         /// UI组层级, 层级大的在层级小的上层显示
         /// </summary>
         int Layer { get; set; }

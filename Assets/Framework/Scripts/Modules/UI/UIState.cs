@@ -3,11 +3,15 @@ namespace UselessFrame.UIElements
 {
     public enum UIState
     {
+        Empty,
         Ready,
         Loading,
         Initing,
         OpenBegin,
         Open,
-        OpenEnd
+        OpenEnd,
+        CloseBegin,
+        Close,
+        CloseEnd
     }
 }
