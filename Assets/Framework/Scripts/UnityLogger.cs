@@ -24,6 +24,7 @@ namespace UnityXFrame.Core.Diagnotics
 
         public void Debug(params object[] content)
         {
+            UnityEngine.Debug.Log(content);
             if (InnerFormat(out string result, content) || !m_MustRegister)
             {
                 UnityEngine.Debug.Log(result);

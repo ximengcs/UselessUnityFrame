@@ -25,7 +25,7 @@ namespace UselessFrameUnity
         {
             InitApplicationSetting();
             XSetting setting = new XSetting();
-            setting.Loggers = new[] { typeof(UnityLogger) };
+            setting.Loggers = new[] { new UnityLogger() };
             setting.ModuleAttributes = new[]
             {
                 typeof(FrameModuleAttribute),
