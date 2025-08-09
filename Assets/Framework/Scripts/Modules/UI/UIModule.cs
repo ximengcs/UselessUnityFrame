@@ -15,10 +15,12 @@ namespace UselessFrame.UIElements
         private Dictionary<string, UIGroup> _groups;
         private Dictionary<Type, Dictionary<long, UIHandle>> _handles;
 
+        public Camera Camera => _uiCamera;
+
         protected override void OnInit(object param)
         {
             base.OnInit(param);
-            Initialize(GameObject.Find("Canvas").GetComponent<Canvas>());
+            Initialize((Canvas)param);
         }
 
         public void Initialize(Canvas canvas)
@@ -74,6 +76,11 @@ namespace UselessFrame.UIElements
             }
 
             return handle != null ? handle : EmptyUIHandle.Default;
+        }
+
+        public IUIGroup GetOrNewGroup(string groupName)
+        {
+            return InnerGetOrNewGroup(groupName);
         }
 
         private UIGroup InnerGetOrNewGroup(string groupName)

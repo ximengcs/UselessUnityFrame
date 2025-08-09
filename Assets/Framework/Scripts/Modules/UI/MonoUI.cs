@@ -30,6 +30,11 @@ namespace UselessFrame.UIElements
 
         IPool IPoolObject.InPool { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
+        public T GetCom<T>(long id = 0) where T : IContainer<IUI>
+        {
+            throw new System.NotImplementedException();
+        }
+
         IContainer<IUI> IContainer<IUI>.AddCom()
         {
             throw new System.NotImplementedException();

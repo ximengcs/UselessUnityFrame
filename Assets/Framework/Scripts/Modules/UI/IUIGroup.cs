@@ -31,5 +31,8 @@ namespace UselessFrame.UIElements
         /// </summary>
         void Close();
 
+        T AddHelper<T>() where T : IUIGroupHelper;
+
+        void RemoveHelper(IUIGroupHelper helper);
     }
 }

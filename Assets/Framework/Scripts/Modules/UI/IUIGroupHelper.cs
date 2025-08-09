@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Threading;
 
 namespace UselessFrame.UIElements
 {
@@ -11,9 +12,11 @@ namespace UselessFrame.UIElements
 
         void OnUnbind(IUIGroup group);
 
-        void OnUIOpen(IUI ui, Action openCompleteCbk);
+        void OnUpdate(float deltaTime);
 
-        void OnUIClose(IUI ui, Action closeCompleteCbk);
+        void OnUIOpen(IUI ui, Action openCompleteCbk, CancellationToken cancellation);
+
+        void OnUIClose(IUI ui, Action closeCompleteCbk, CancellationToken cancellation);
 
         void OnUIUpdate(IUI ui, float deltaTime);
 

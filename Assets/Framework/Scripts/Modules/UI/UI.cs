@@ -1,5 +1,6 @@
 ﻿
 using UnityEngine;
+using UnityXFrame.Core.UIElements;
 using UselessFrame.NewRuntime;
 using UselessFrame.Runtime.Collections;
 using UselessFrame.Runtime.Pools;
@@ -50,6 +51,31 @@ namespace UselessFrame.UIElements
         public IContainer<IUI> Root => _container.Root;
 
         public IContainer<IUI> Parent => _container.Parent;
+
+        public void Trigger<T>() where T : IContainerEventHandler
+        {
+            _container.Trigger<T>();
+        }
+
+        public IContainer<IUI> AddCom()
+        {
+            return _container.AddCom();
+        }
+
+        public T AddCom<T>() where T : IContainer<IUI>
+        {
+            return _container.AddCom<T>();
+        }
+
+        public void RemoveCom(IContainer<IUI> child)
+        {
+            _container.RemoveCom(child);
+        }
+
+        public T GetCom<T>(long id = default) where T : IContainer<IUI>
+        {
+            return _container.GetCom<T>(id);    
+        }
         #endregion
 
         #region IUIGameObjectBinder
@@ -80,6 +106,8 @@ namespace UselessFrame.UIElements
         void IUIGroupElement.OnInit(object userData)
         {
             _container = Container<IUI>.Create(this);
+            Debug.Log($"owner {_container.Owner == null}");
+            _container.AddCom<UIComFinder>();
             OnInit(userData);
         }
 
@@ -107,6 +135,9 @@ namespace UselessFrame.UIElements
         {
             _uiGroup = (UIGroup)group;
             _transform.SetParent(_uiGroup.Root);
+            _transform.anchoredPosition3D = Vector3.zero;
+            _transform.localScale = Vector2.one;
+            _transform.localRotation = Quaternion.identity;
         }
         #endregion
 
@@ -142,26 +173,6 @@ namespace UselessFrame.UIElements
         protected virtual void OnUpdate() { }
 
         protected virtual void OnGroupChange() { }
-
-        void IContainer<IUI>.Trigger<T>()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        IContainer<IUI> IContainer<IUI>.AddCom()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        T IContainer<IUI>.AddCom<T>()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        void IContainer<IUI>.RemoveCom(IContainer<IUI> child)
-        {
-            throw new System.NotImplementedException();
-        }
         #endregion
     }
 }

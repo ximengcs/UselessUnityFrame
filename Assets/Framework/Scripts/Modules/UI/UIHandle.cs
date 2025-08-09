@@ -15,13 +15,18 @@ namespace UselessFrame.UIElements
         private UIAttribute _attr;
         private UIGroup _group;
         private Subject<UIHandle, UIState> _state;
-        private CancellationTokenSource _disposeTokenSource;
-
-        IReadonlySubject<UIState> IUIHandle.State => _state;
+        private CancellationTokenSource _openTokenSource;
+        private CancellationTokenSource _closeTokenSource;
 
         public IUI UI => _ui;
 
+        IReadonlySubject<UIState> IUIHandle.State => _state;
+
         public ISubject<UIHandle, UIState> State => _state;
+
+        public CancellationToken OpenToken => _openTokenSource?.Token ?? CancellationToken.None;
+
+        public CancellationToken CloseToken => _openTokenSource?.Token ?? CancellationToken.None;
 
         public UIHandle(Type type)
         {
@@ -65,16 +70,27 @@ namespace UselessFrame.UIElements
             }
         }
 
-        public async void TriggerOpen(object userData)
+        public void TriggerOpen(object userData)
         {
-            _disposeTokenSource = new CancellationTokenSource();
+            if (_closeTokenSource != null && !_closeTokenSource.IsCancellationRequested)
+                _closeTokenSource.Cancel();
+
+            if (_openTokenSource != null && !_openTokenSource.IsCancellationRequested)
+                _openTokenSource.Cancel();
+
+            _openTokenSource = new CancellationTokenSource();
+            InnerTriggerOpen(userData, OpenToken);
+        }
+
+        private async void InnerTriggerOpen(object userData, CancellationToken token)
+        {
             if (_state.Value == UIState.Ready)
             {
                 _state.Value = UIState.Loading;
-                _ui = (IUI)await X.Pool.RequireAsync(_uiType, _attr.ResSource);
+                _ui = (IUI)await X.Pool.RequireAsync(_uiType, _attr?.ResSource ?? 0);
                 if (_ui is IUIGroupElement groupElement)
                     groupElement.OnBindHandle(this);
-                if (_disposeTokenSource.IsCancellationRequested)
+                if (token.IsCancellationRequested)
                     return;
             }
 
@@ -88,19 +104,30 @@ namespace UselessFrame.UIElements
                 }
             }
 
-            if (_state.Value == UIState.Initing)
+            switch (_state.Value)
             {
-                _ui.Open();
+                case UIState.Initing:
+                case UIState.Close:
+                case UIState.CloseBegin:
+                case UIState.CloseEnd:
+                case UIState.Open:
+                case UIState.OpenBegin:
+                case UIState.OpenEnd:
+                    _ui.Open();
+                    break;
             }
         }
 
         public void TriggerClose()
         {
-            if (_disposeTokenSource == null)
-                return;
-            if (_disposeTokenSource.IsCancellationRequested)
-                return;
-            _disposeTokenSource.Cancel();
+            if (_openTokenSource != null && !_openTokenSource.IsCancellationRequested)
+                _openTokenSource.Cancel();
+
+            if (_closeTokenSource != null && !_closeTokenSource.IsCancellationRequested)
+                _closeTokenSource.Cancel();
+
+            _closeTokenSource = new CancellationTokenSource();
+
             switch (_state.Value)
             {
                 case UIState.Initing:

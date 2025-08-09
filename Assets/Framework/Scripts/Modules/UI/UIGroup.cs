@@ -51,7 +51,7 @@ namespace UselessFrame.UIElements
             _elementsMap = new Dictionary<string, IUIGroupElement>();
             _uiCacheList = new List<IUIGroupElement>();
             _listDirty = false;
-            InnerClose();
+            InnerOpen();
         }
 
         public T AddHelper<T>() where T : IUIGroupHelper
@@ -162,7 +162,7 @@ namespace UselessFrame.UIElements
                 {
                     if (helper.MatchType(ui.GetType()))
                     {
-                        helper.OnUIOpen(ui, uiHandle.OpenFinish);
+                        helper.OnUIOpen(ui, uiHandle.OpenFinish, uiHandle.OpenToken);
                         handle = true;
                         break;
                     }
@@ -186,7 +186,7 @@ namespace UselessFrame.UIElements
                 {
                     if (helper.MatchType(ui.GetType()))
                     {
-                        helper.OnUIClose(ui, uiHandle.CloseFinish);
+                        helper.OnUIClose(ui, uiHandle.CloseFinish, uiHandle.CloseToken);
                         handle = true;
                         break;
                     }
@@ -220,7 +220,8 @@ namespace UselessFrame.UIElements
                         }
                     }
                 }
-                ui.OnUpdate();
+                if (ui.Handle.State.Value == UIState.OpenEnd)
+                    ui.OnUpdate();
             }
         }
     }
