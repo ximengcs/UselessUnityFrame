@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Threading;
+using UnityEngine;
 using UselessFrame.UIElements;
 
 namespace UnityXFrameLib.UIElements
@@ -44,18 +45,19 @@ namespace UnityXFrameLib.UIElements
             if (m_Opening != null)
             {
                 KillOpen(m_Opening);
-                m_Opening = null;
             }
+            m_Opening = null;
             if (m_CurOpenUI != null && m_CurOpenUI != ui)
             {
                 KillOpen(m_CurOpenUI);
-                m_CurOpenUI = null;
             }
-
+            m_CurOpenUI = null;
+            Debug.Log($"trigger close cbk1 {ui.GetHashCode()}");
             await DoClose(ui, cancellation);
             if (cancellation.IsCancellationRequested)
                 return;
 
+            Debug.Log($"trigger close cbk2 {ui.GetHashCode()}");
             closeCompleteCbk();
             if (m_CurOpenUI == ui)
             {

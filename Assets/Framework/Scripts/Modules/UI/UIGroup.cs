@@ -50,6 +50,15 @@ namespace UselessFrame.UIElements
             _uiList = new List<IUIGroupElement>();
             _elementsMap = new Dictionary<string, IUIGroupElement>();
             _uiCacheList = new List<IUIGroupElement>();
+
+            _transform.anchorMin = Vector2.zero;
+            _transform.anchorMax = Vector2.one;
+            _transform.offsetMin = Vector2.zero;
+            _transform.offsetMax = Vector2.zero;
+
+            _transform.localScale = Vector3.one;
+            _transform.localRotation = Quaternion.identity;
+
             _listDirty = false;
             InnerOpen();
         }
@@ -105,6 +114,7 @@ namespace UselessFrame.UIElements
 
             _canvasGroup.alpha = 1;
             _canvasGroup.blocksRaycasts = true;
+            _canvasGroup.interactable = true;
         }
 
         public void Close()
@@ -119,6 +129,7 @@ namespace UselessFrame.UIElements
 
             _canvasGroup.alpha = 0;
             _canvasGroup.blocksRaycasts = false;
+            _canvasGroup.interactable = false;
         }
 
         public void AddUI(IUIGroupElement ui)

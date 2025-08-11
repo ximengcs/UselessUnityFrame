@@ -45,12 +45,12 @@ namespace UselessFrame.UIElements
             throw new System.NotImplementedException();
         }
 
-        IUIHandle IUI.Close()
+        IUIHandle IUI.Close(bool destory)
         {
             throw new System.NotImplementedException();
         }
 
-        void IPoolObject.OnCreate()
+        void IPoolObject.OnCreate(object userData)
         {
             throw new System.NotImplementedException();
         }
@@ -65,7 +65,7 @@ namespace UselessFrame.UIElements
             throw new System.NotImplementedException();
         }
 
-        void IPoolObject.OnRequest(object userData)
+        void IPoolObject.OnRequest()
         {
             throw new System.NotImplementedException();
         }

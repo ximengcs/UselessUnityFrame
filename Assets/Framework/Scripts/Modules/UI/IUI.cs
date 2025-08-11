@@ -11,7 +11,7 @@ namespace UselessFrame.UIElements
 
         IUIHandle Open();
 
-        IUIHandle Close();
+        IUIHandle Close(bool destroy = true);
 
         IUIGroup Group { get; }
     }

@@ -6,6 +6,7 @@ namespace UselessFrame.UIElements
         Empty,
         Ready,
         Loading,
+        Loaded,
         Initing,
         OpenBegin,
         Open,

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UselessFrame.NewRuntime;
+using System.Collections.Generic;
 using UselessFrame.Runtime;
 
 namespace UselessFrame.UIElements
@@ -31,23 +31,26 @@ namespace UselessFrame.UIElements
             _transform = (RectTransform)_gameObject.transform;
             _groups = new Dictionary<string, UIGroup>();
             _handles = new Dictionary<Type, Dictionary<long, UIHandle>>();
-            X.Pool.RegisterCommonHelper<IPoolUI>(new UIPoolHelper());
+            X.Pool.RegisterCommonHelper<IPoolUI>(new UIPoolHelper(this));
         }
 
-        public IUIHandle OpenUIAsync<T>(string groupName, long id, object userData = null) where T : IUI
+        public IUIHandle OpenUIAsync(Type uiType, string groupName, long id, object userData = null)
         {
-            Type uiType = typeof(T);
             if (!_handles.TryGetValue(uiType, out Dictionary<long, UIHandle> handlesMap))
             {
                 handlesMap = new Dictionary<long, UIHandle>();
                 _handles.Add(uiType, handlesMap);
             }
 
-            if (!handlesMap.TryGetValue(id, out UIHandle uiHandle))
+            if (handlesMap.TryGetValue(id, out UIHandle uiHandle))
             {
-                uiHandle = new UIHandle(uiType);
-                handlesMap.Add(id, uiHandle);
+                handlesMap.Remove(id);
+                uiHandle.TriggerClose(true);
             }
+
+            uiHandle = X.Pool.Require<UIHandle>(UIHandle.GetPoolKey(uiType), uiType);
+            uiHandle.BindId(id);
+            handlesMap.Add(id, uiHandle);
 
             if (!uiHandle.InGroup(groupName))
             {
@@ -60,22 +63,37 @@ namespace UselessFrame.UIElements
             return uiHandle;
         }
 
-        public IUIHandle CloseUIAsync<T>(long id, bool destroy)
+        public IUIHandle OpenUIAsync<T>(string groupName, long id, object userData = null) where T : IUI
         {
             Type uiType = typeof(T);
+            return OpenUIAsync(uiType, groupName, id, userData);
+        }
+
+        public IUIHandle CloseUIAsync(Type uiType, long id, bool destroy = true)
+        {
             if (!_handles.TryGetValue(uiType, out Dictionary<long, UIHandle> handlesMap))
             {
                 handlesMap = new Dictionary<long, UIHandle>();
                 _handles.Add(uiType, handlesMap);
             }
+            Debug.Log($"close ui 222 {id} {handlesMap.ContainsKey(id)}");
 
             if (handlesMap.TryGetValue(id, out UIHandle handle))
             {
-                handle.TriggerClose();
-                return handle;
+                Debug.Log($"Close UI {destroy} {handle.Valid} {id}");
+                if (destroy || !handle.Valid)
+                {
+                    handlesMap.Remove(id);
+                }
+                handle.TriggerClose(destroy);
             }
 
             return handle != null ? handle : EmptyUIHandle.Default;
+        }
+
+        public IUIHandle CloseUIAsync<T>(long id, bool destroy = true) where T : IUI
+        {
+            return (IUIHandle)CloseUIAsync(typeof(T), id, destroy);
         }
 
         public IUIGroup GetOrNewGroup(string groupName)

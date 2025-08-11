@@ -5,11 +5,13 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UselessFrame.NewRuntime;
 using UselessFrame.Runtime.Observable;
+using UselessFrame.Runtime.Pools;
 
 namespace UselessFrame.UIElements
 {
-    internal class UIHandle : IUIHandle
+    internal class UIHandle : IUIHandle, IPoolObject
     {
+        private long _id;
         private IUI _ui;
         private Type _uiType;
         private UIAttribute _attr;
@@ -17,6 +19,7 @@ namespace UselessFrame.UIElements
         private Subject<UIHandle, UIState> _state;
         private CancellationTokenSource _openTokenSource;
         private CancellationTokenSource _closeTokenSource;
+        private bool _closeToDestory;
 
         public IUI UI => _ui;
 
@@ -26,17 +29,54 @@ namespace UselessFrame.UIElements
 
         public CancellationToken OpenToken => _openTokenSource?.Token ?? CancellationToken.None;
 
-        public CancellationToken CloseToken => _openTokenSource?.Token ?? CancellationToken.None;
+        public CancellationToken CloseToken => _closeTokenSource?.Token ?? CancellationToken.None;
 
-        public UIHandle(Type type)
+        public bool Valid
         {
-            _uiType = type;
-            _attr = (UIAttribute)X.Type.GetAttribute(_uiType, typeof(UIAttribute));
-            _state = new Subject<UIHandle, UIState>(this, UIState.Ready);
-            _state.Subscribe((state) =>
+            get
             {
-                Debug.Log($"ui state change {state}");
-            });
+                switch (_state.Value)
+                {
+                    case UIState.Ready:
+                    case UIState.Loading: return false;
+
+                    default: return true;
+                }
+            }
+        }
+
+        int IPoolObject.PoolKey => GetPoolKey(_uiType);
+
+        IPool IPoolObject.InPool { get; set; }
+
+        public static int GetPoolKey(Type type)
+        {
+            return type.GetHashCode();
+        }
+
+        public void BindId(long id)
+        {
+            _id = id;
+        }
+
+        public void TryToPool()
+        {
+            if (!_closeToDestory)
+                return;
+            CancelCurrentOperate();
+
+            if (_ui is IUIGroupElement groupElement)
+            {
+                _group.RemoveUI(groupElement);
+                groupElement.OnSetGroup(null);
+            }
+            Debug.Log($"TryToPool 1");
+            if (_ui is IPoolUI poolUI)
+            {
+                Debug.Log($"TryToPool 2");
+                X.Pool.Release(poolUI);
+            }
+            X.Pool.Release(this);
         }
 
         public bool InGroup(string groupName)
@@ -70,33 +110,46 @@ namespace UselessFrame.UIElements
             }
         }
 
-        public void TriggerOpen(object userData)
+        private void CancelCurrentOperate()
         {
             if (_closeTokenSource != null && !_closeTokenSource.IsCancellationRequested)
                 _closeTokenSource.Cancel();
 
             if (_openTokenSource != null && !_openTokenSource.IsCancellationRequested)
                 _openTokenSource.Cancel();
+        }
 
+        public void TriggerOpen(object userData)
+        {
+            CancelCurrentOperate();
             _openTokenSource = new CancellationTokenSource();
             InnerTriggerOpen(userData, OpenToken);
         }
 
         private async void InnerTriggerOpen(object userData, CancellationToken token)
         {
+            Debug.Log($"ready open ui1 {_state.Value} {GetHashCode()} {token == OpenToken}");
             if (_state.Value == UIState.Ready)
             {
                 _state.Value = UIState.Loading;
-                _ui = (IUI)await X.Pool.RequireAsync(_uiType, _attr?.ResSource ?? 0);
-                if (_ui is IUIGroupElement groupElement)
-                    groupElement.OnBindHandle(this);
+                IUI loadUI = (IUI)await X.Pool.RequireAsync(_uiType, _attr?.ResSource ?? 0);
                 if (token.IsCancellationRequested)
+                {
+                    if (loadUI is IPoolUI poolUI)
+                        X.Pool.Release(poolUI);
+                    Debug.Log($"dispose ui {_state.Value} {GetHashCode()} {token == OpenToken}");
                     return;
+                }
+                _ui = loadUI;
+                if (_ui is IUIGroupElement groupElement)
+                    groupElement.OnBindHandle(_id, this);
+                _state.Value = UIState.Loaded;
             }
 
-            if (_state.Value == UIState.Loading)
+            if (_state.Value == UIState.Loaded)
             {
                 _state.Value = UIState.Initing;
+                Debug.Log($"set ui init {_state.Value} {GetHashCode()} {_ui == null} {token == OpenToken}");
                 if (_ui is IUIGroupElement groupElement)
                 {
                     InnerSetUIGroup();
@@ -104,6 +157,7 @@ namespace UselessFrame.UIElements
                 }
             }
 
+            Debug.Log($"ready open ui2 {_state.Value} {GetHashCode()} {token == OpenToken}");
             switch (_state.Value)
             {
                 case UIState.Initing:
@@ -118,16 +172,13 @@ namespace UselessFrame.UIElements
             }
         }
 
-        public void TriggerClose()
+        public void TriggerClose(bool destroy)
         {
-            if (_openTokenSource != null && !_openTokenSource.IsCancellationRequested)
-                _openTokenSource.Cancel();
-
-            if (_closeTokenSource != null && !_closeTokenSource.IsCancellationRequested)
-                _closeTokenSource.Cancel();
+            _closeToDestory = destroy;
+            CancelCurrentOperate();
 
             _closeTokenSource = new CancellationTokenSource();
-
+            X.Log.Debug($"Trigger UI Close {_state.Value}");
             switch (_state.Value)
             {
                 case UIState.Initing:
@@ -136,6 +187,12 @@ namespace UselessFrame.UIElements
                 case UIState.OpenEnd:
                     {
                         _ui.Close();
+                        break;
+                    }
+
+                case UIState.CloseEnd:
+                    {
+                        TryToPool();
                         break;
                     }
             }
@@ -155,6 +212,8 @@ namespace UselessFrame.UIElements
             if (_ui is IUIGroupElement groupElement)
                 groupElement.OnClose();
             _state.Value = UIState.CloseEnd;
+            Debug.Log($"Close finish {_closeToDestory}");
+            TryToPool();
         }
 
         public async UniTask<IUI> WaitUI()
@@ -178,6 +237,33 @@ namespace UselessFrame.UIElements
             return info.Start(_state, state);
         }
 
+        void IPoolObject.OnCreate(object userData)
+        {
+            _uiType = (Type)userData;
+            _attr = (UIAttribute)X.Type.GetAttribute(_uiType, typeof(UIAttribute));
+            _state = new Subject<UIHandle, UIState>(this, UIState.Ready);
+            _state.Subscribe((state) =>
+            {
+                Debug.Log($"ui state change {state}");
+            });
+        }
+
+        void IPoolObject.OnRequest()
+        {
+        }
+
+        void IPoolObject.OnRelease()
+        {
+            _ui = null;
+            _openTokenSource = null;
+            _closeTokenSource = null;
+            _state.Value = UIState.Ready;
+        }
+
+        void IPoolObject.OnDelete()
+        {
+        }
+
         private struct TaskInfo
         {
             private UniTaskCompletionSource _source;
@@ -196,6 +282,7 @@ namespace UselessFrame.UIElements
 
             private void StateChangeHandler(UIState state)
             {
+                Debug.Log($"StateChangeHandler {state}");
                 if (_state == state)
                     _source.TrySetResult();
             }

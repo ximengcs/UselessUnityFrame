@@ -5,7 +5,7 @@ namespace UselessFrame.UIElements
     {
         UIHandle Handle { get; }
 
-        void OnBindHandle(UIHandle handle);
+        void OnBindHandle(long id, UIHandle handle);
 
         void OnInit(object userData);
 

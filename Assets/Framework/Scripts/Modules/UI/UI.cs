@@ -34,7 +34,7 @@ namespace UselessFrame.UIElements
             return _handle;
         }
 
-        public IUIHandle Close()
+        public IUIHandle Close(bool destroy = true)
         {
             _uiGroup.CloseUI(this);
             return _handle;
@@ -74,7 +74,7 @@ namespace UselessFrame.UIElements
 
         public T GetCom<T>(long id = default) where T : IContainer<IUI>
         {
-            return _container.GetCom<T>(id);    
+            return _container.GetCom<T>(id);
         }
         #endregion
 
@@ -98,14 +98,14 @@ namespace UselessFrame.UIElements
             _layer = layer;
         }
 
-        void IUIGroupElement.OnBindHandle(UIHandle handle)
+        void IUIGroupElement.OnBindHandle(long id, UIHandle handle)
         {
+            _container = Container<IUI>.Create(this, id);
             _handle = handle;
         }
 
         void IUIGroupElement.OnInit(object userData)
         {
-            _container = Container<IUI>.Create(this);
             Debug.Log($"owner {_container.Owner == null}");
             _container.AddCom<UIComFinder>();
             OnInit(userData);
@@ -134,10 +134,13 @@ namespace UselessFrame.UIElements
         void IUIGroupElement.OnSetGroup(IUIGroup group)
         {
             _uiGroup = (UIGroup)group;
-            _transform.SetParent(_uiGroup.Root);
-            _transform.anchoredPosition3D = Vector3.zero;
-            _transform.localScale = Vector2.one;
-            _transform.localRotation = Quaternion.identity;
+            if (_uiGroup != null)
+            {
+                _transform.SetParent(_uiGroup.Root);
+                _transform.anchoredPosition3D = Vector3.zero;
+                _transform.localScale = Vector2.one;
+                _transform.localRotation = Quaternion.identity;
+            }
         }
         #endregion
 
@@ -146,11 +149,11 @@ namespace UselessFrame.UIElements
 
         IPool IPoolObject.InPool { get; set; }
 
-        void IPoolObject.OnCreate()
+        void IPoolObject.OnCreate(object param)
         {
         }
 
-        void IPoolObject.OnRequest(object param)
+        void IPoolObject.OnRequest()
         {
         }
 

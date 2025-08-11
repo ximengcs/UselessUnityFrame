@@ -10,11 +10,19 @@ namespace UselessFrame.UIElements
 {
     public class UIPoolHelper : IPoolHelper
     {
+        private IUIGroup _cacheGroup;
+
         int IPoolHelper.CacheCount => 32;
+
+        public UIPoolHelper(UIModule module)
+        {
+            _cacheGroup = module.GetOrNewGroup("[Pool]");
+            _cacheGroup.Close();
+        }
 
         IPoolObject IPoolHelper.Factory(Type type, int poolKey)
         {
-            Debug.Log($"factory  {type.Name}");
+            Debug.Log($"factory  {type.Name} {poolKey}");
             int useResModule = poolKey;
             string uiPath = InnerUIPath(type);
             GameObject prefab = X.Module.Get<ResourceModule>().Load<GameObject>(uiPath);
@@ -32,7 +40,7 @@ namespace UselessFrame.UIElements
 
         async UniTask<IPoolObject> IPoolHelper.FactoryAsync(Type type, int poolKey)
         {
-            Debug.Log($"factory async {type.Name}");
+            Debug.Log($"factory async {type.Name} {poolKey}");
             int useResModule = poolKey;
             string uiPath = InnerUIPath(type);
             GameObject prefab = await X.Module.Get<ResourceModule>().LoadAsync<GameObject>(uiPath);
@@ -80,6 +88,10 @@ namespace UselessFrame.UIElements
 
         void IPoolHelper.OnObjectRelease(IPoolObject obj)
         {
+            if (obj is IPoolUI ui)
+            {
+                ui.RootRect.SetParent(_cacheGroup.Root, false);
+            }
         }
 
         void IPoolHelper.OnObjectRequest(IPoolObject obj)
