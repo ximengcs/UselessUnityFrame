@@ -1,5 +1,6 @@
 ﻿
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -7,6 +8,7 @@ using UnityEngine.UI;
 using UnityXFrame.Core.UIElements;
 using UselessFrame.NewRuntime;
 using UselessFrame.NewRuntime.Fiber;
+using UselessFrame.Runtime.Observable;
 using UselessFrame.UIElements;
 using UselessFrameUnity;
 
@@ -45,19 +47,12 @@ namespace TestGame
             IUIHandle handle = G.UI.OpenUIAsync<TestUI>("Test", 1);
             await handle.WaitStateTask(UIState.OpenEnd);
             IUI ui = handle.UI;
-            for(int i = 0; i < 100; i++)
-            {
-                await UniTaskExt.Delay(5);
-                Debug.Log($"UI Close Test1");
-                ui.Close();
-                Debug.Log($"UI Close Test");
-                await handle.WaitStateTask(UIState.CloseEnd);
-                Debug.Log($"UI Close Test2");
-                await UniTaskExt.Delay(5);
-                ui.Open();
-                await handle.WaitStateTask(UIState.OpenEnd);
-            }
             
+            for(int i = 0; i < 10; i++)
+            {
+                ui.Open();
+            }
+
             //await UniTaskExt.Delay(5);
             //
             //for (int i = 0; i < 50; i++)

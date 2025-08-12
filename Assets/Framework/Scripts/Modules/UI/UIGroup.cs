@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UselessFrame.NewRuntime;
 
 namespace UselessFrame.UIElements
@@ -45,6 +46,9 @@ namespace UselessFrame.UIElements
             _module = uiModule;
             _gameObject = root;
             _canvasGroup = _gameObject.GetComponent<CanvasGroup>();
+            Canvas canvas = _gameObject.AddComponent<Canvas>();
+            canvas.vertexColorAlwaysGammaSpace = true;
+            _gameObject.AddComponent<GraphicRaycaster>();
             _transform = (RectTransform)root.transform;
             _helpers = new List<IUIGroupHelper>();
             _uiList = new List<IUIGroupElement>();
@@ -164,8 +168,19 @@ namespace UselessFrame.UIElements
 
         public void OpenUI(IUIGroupElement ui)
         {
-            bool handle = false;
             UIHandle uiHandle = ui.Handle;
+            switch (uiHandle.State.Value)
+            {
+                case UIState.Ready:
+                case UIState.Loading:
+                case UIState.Loaded:
+                case UIState.OpenBegin:
+                case UIState.Open:
+                case UIState.OpenEnd:
+                    return;
+            }
+
+            bool handle = false;
             ui.Handle.State.Value = UIState.OpenBegin;
             if (_helpers != null && _helpers.Count > 0)
             {
@@ -188,9 +203,20 @@ namespace UselessFrame.UIElements
 
         public void CloseUI(IUIGroupElement ui)
         {
-            bool handle = false;
             UIHandle uiHandle = ui.Handle;
-            ui.Handle.State.Value = UIState.CloseBegin;
+            switch (uiHandle.State.Value)
+            {
+                case UIState.Ready:
+                case UIState.Loading:
+                case UIState.Loaded:
+                case UIState.CloseBegin:
+                case UIState.Close:
+                case UIState.CloseEnd:
+                    return;
+            }
+            Debug.Log($"[State] {uiHandle.State.Value}");
+            bool handle = false;
+            uiHandle.State.Value = UIState.CloseBegin;
             if (_helpers != null && _helpers.Count > 0)
             {
                 foreach (IUIGroupHelper helper in _helpers)

@@ -200,10 +200,12 @@ namespace UselessFrame.UIElements
 
         public void OpenFinish()
         {
+            Debug.Log($"[State][Test]OpenFinish");
             _state.Value = UIState.Open;
             if (_ui is IUIGroupElement groupElement)
                 groupElement.OnOpen();
             _state.Value = UIState.OpenEnd;
+            Debug.Log($"[State][Test]OpenFinish2");
         }
 
         public void CloseFinish()
@@ -264,27 +266,33 @@ namespace UselessFrame.UIElements
         {
         }
 
-        private struct TaskInfo
+        private class TaskInfo
         {
             private UniTaskCompletionSource _source;
             private IReadonlySubject<UIState> _subject;
             private UIState _state;
+            private bool _complete;
 
             public async UniTask Start(IReadonlySubject<UIState> subject, UIState state)
             {
                 _state = state;
                 _subject = subject;
                 _source = new UniTaskCompletionSource();
+                Debug.Log($"[State][Subscribe]StateChangeHandler {state} {_source.GetHashCode()} {_complete}");
+                _subject.Unsubscribe(StateChangeHandler);
                 _subject.Subscribe(StateChangeHandler);
                 await _source.Task;
-                _subject.Unsubscribe(StateChangeHandler);
             }
 
             private void StateChangeHandler(UIState state)
             {
-                Debug.Log($"StateChangeHandler {state}");
                 if (_state == state)
+                {
+                    _subject.Unsubscribe(StateChangeHandler);
+                    Debug.Log($"[State][UnSubscribe]StateChangeHandler {state} {_source.GetHashCode()} {_complete}");
                     _source.TrySetResult();
+                    _complete = true;
+                }
             }
         }
     }
