@@ -14,7 +14,7 @@ using UselessFrameUnity;
 
 namespace TestGame
 {
-    public class TestUI : UI
+    public class TestUI : MonoUI
     {
         private Image _background;
         private Button _closeBtn;

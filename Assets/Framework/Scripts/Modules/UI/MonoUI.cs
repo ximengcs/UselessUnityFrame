@@ -1,88 +1,179 @@
 ﻿
 using UnityEngine;
+using UnityXFrame.Core.UIElements;
 using UselessFrame.NewRuntime;
 using UselessFrame.Runtime.Collections;
 using UselessFrame.Runtime.Pools;
 
 namespace UselessFrame.UIElements
 {
-    public class MonoUI : MonoBehaviour, IUI, IPoolUI
+    public class MonoUI : MonoBehaviour, IUI, IPoolUI, IUIGroupElement, IUIGameObjectBinder
     {
-        public int PoolKey => throw new System.NotImplementedException();
+        private IContainer<IUI> _container;
+        private UIHandle _handle;
+        private UIGroup _uiGroup;
+        private int _layer;
 
-        RectTransform IUI.RootRect => throw new System.NotImplementedException();
+        protected RectTransform _transform;
 
-        int IUI.Layer { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        #region IUI Interface
+        public RectTransform RootRect => _transform;
 
-        IUIGroup IUI.Group => throw new System.NotImplementedException();
-
-        IUI IContainer<IUI>.Owner => throw new System.NotImplementedException();
-
-        long IContainer<IUI>.Id => throw new System.NotImplementedException();
-
-        IDataProvider IContainer<IUI>.Data => throw new System.NotImplementedException();
-
-        IContainer<IUI> IContainer<IUI>.Root => throw new System.NotImplementedException();
-
-        IContainer<IUI> IContainer<IUI>.Parent => throw new System.NotImplementedException();
-
-        int IPoolObject.PoolKey => throw new System.NotImplementedException();
-
-        IPool IPoolObject.InPool { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-
-        public T GetCom<T>(long id = 0) where T : IContainer<IUI>
+        public int Layer
         {
-            throw new System.NotImplementedException();
+            get => _layer;
+            set => _uiGroup.SetUILayer(this, value);
         }
 
-        IContainer<IUI> IContainer<IUI>.AddCom()
+        public IUIGroup Group => _uiGroup;
+
+        public IUIHandle Open()
         {
-            throw new System.NotImplementedException();
+            _uiGroup.OpenUI(this);
+            return _handle;
         }
 
-        T IContainer<IUI>.AddCom<T>()
+        public IUIHandle Close(bool destroy = true)
         {
-            throw new System.NotImplementedException();
+            _uiGroup.CloseUI(this);
+            return _handle;
+        }
+        #endregion
+
+        #region Container Interface
+        public IUI Owner => _container.Owner;
+
+        public long Id => _container.Id;
+
+        public IDataProvider Data => _container.Data;
+
+        public IContainer<IUI> Root => _container.Root;
+
+        public IContainer<IUI> Parent => _container.Parent;
+
+        public void Trigger<T>() where T : IContainerEventHandler
+        {
+            _container.Trigger<T>();
         }
 
-        IUIHandle IUI.Close(bool destory)
+        public IContainer<IUI> AddCom()
         {
-            throw new System.NotImplementedException();
+            return _container.AddCom();
         }
 
-        void IPoolObject.OnCreate(object userData)
+        public T AddCom<T>() where T : IContainer<IUI>
         {
-            throw new System.NotImplementedException();
+            return _container.AddCom<T>();
         }
 
-        void IPoolObject.OnDelete()
+        public void RemoveCom(IContainer<IUI> child)
         {
-            throw new System.NotImplementedException();
+            _container.RemoveCom(child);
         }
 
-        void IPoolObject.OnRelease()
+        public T GetCom<T>(long id = default) where T : IContainer<IUI>
         {
-            throw new System.NotImplementedException();
+            return _container.GetCom<T>(id);
+        }
+        #endregion
+
+        #region IUIGameObjectBinder
+        void IUIGameObjectBinder.BindGameObject(GameObject gameObject)
+        {
+            IUINode node = this;
+            gameObject.name = node.Name;
+            _transform = gameObject.GetComponent<RectTransform>();
+        }
+        #endregion
+
+        #region IUIGroupElement Function
+        UIHandle IUIGroupElement.Handle => _handle;
+
+        string IUINode.Name => $"{GetType().Name}{GetHashCode()}";
+
+        void IUIGroupElement.OnSetLayer(int layer)
+        {
+            _layer = layer;
+        }
+
+        void IUIGroupElement.OnBindHandle(long id, UIHandle handle)
+        {
+            _container = Container<IUI>.Create(this, id);
+            _handle = handle;
+        }
+
+        void IUIGroupElement.OnInit(object userData)
+        {
+            Debug.Log($"owner {_container.Owner == null}");
+            _container.AddCom<UIComFinder>();
+            OnInit(userData);
+        }
+
+        void IUIGroupElement.OnOpen()
+        {
+            OnOpen();
+        }
+
+        void IUIGroupElement.OnClose()
+        {
+            OnClose();
+        }
+
+        void IUIGroupElement.OnUpdate()
+        {
+            OnUpdate();
+        }
+
+        void IUIGroupElement.OnGroupChange()
+        {
+            OnGroupChange();
+        }
+
+        void IUIGroupElement.OnSetGroup(IUIGroup group)
+        {
+            _uiGroup = (UIGroup)group;
+            if (_uiGroup != null)
+            {
+                _transform.SetParent(_uiGroup.Root);
+                _transform.anchoredPosition3D = Vector3.zero;
+                _transform.localScale = Vector2.one;
+                _transform.localRotation = Quaternion.identity;
+            }
+        }
+        #endregion
+
+        #region IPoolUI
+        int IPoolObject.PoolKey { get; }
+
+        IPool IPoolObject.InPool { get; set; }
+
+        void IPoolObject.OnCreate(object param)
+        {
         }
 
         void IPoolObject.OnRequest()
         {
-            throw new System.NotImplementedException();
         }
 
-        IUIHandle IUI.Open()
+        void IPoolObject.OnRelease()
         {
-            throw new System.NotImplementedException();
         }
 
-        void IContainer<IUI>.RemoveCom(IContainer<IUI> child)
+        void IPoolObject.OnDelete()
         {
-            throw new System.NotImplementedException();
         }
+        #endregion
 
-        void IContainer<IUI>.Trigger<T>()
-        {
-            throw new System.NotImplementedException();
-        }
+        #region Child Function
+        protected virtual void OnInit(object userData) { }
+
+        protected virtual void OnOpen() { }
+
+        protected virtual void OnClose() { }
+
+        protected virtual void OnUpdate() { }
+
+        protected virtual void OnGroupChange() { }
+        #endregion
     }
 }

@@ -69,6 +69,8 @@ namespace UselessFrame.UIElements
             MonoUI ui = (MonoUI)inst.GetComponent(type);
             if (ui == null)
                 ui = (MonoUI)inst.AddComponent(type);
+            if (ui is IUIGameObjectBinder binder)
+                binder.BindGameObject(inst);
             return ui;
         }
 
