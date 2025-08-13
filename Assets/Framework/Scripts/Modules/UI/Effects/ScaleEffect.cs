@@ -46,8 +46,8 @@ namespace UnityXFrameLib.UIElements
         public async UniTask<bool> Do(IUI ui, CancellationToken token)
         {
             int key = ui.GetHashCode();
-            ui.RootRect.localScale = m_Start;
-            Tween tween = ui.RootRect.DOScale(m_Target, m_Dur);
+            ui.MainRect.localScale = m_Start;
+            Tween tween = ui.MainRect.DOScale(m_Target, m_Dur);
             m_Anims.Add(key, tween);
             AutoResetUniTaskCompletionSource taskSource = AutoResetUniTaskCompletionSource.Create();
             tween.OnComplete(() => taskSource.TrySetResult());

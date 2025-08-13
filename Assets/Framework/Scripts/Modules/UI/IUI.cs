@@ -7,6 +7,8 @@ namespace UselessFrame.UIElements
     {
         RectTransform RootRect { get; }
 
+        RectTransform MainRect { get; }
+
         int Layer { get; set; }
 
         IUIHandle Open();

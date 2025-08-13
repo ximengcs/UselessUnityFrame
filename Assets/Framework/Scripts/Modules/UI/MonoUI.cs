@@ -13,11 +13,14 @@ namespace UselessFrame.UIElements
         private UIHandle _handle;
         private UIGroup _uiGroup;
         private int _layer;
+        private RectTransform _mainRect;
 
         protected RectTransform _transform;
 
         #region IUI Interface
         public RectTransform RootRect => _transform;
+
+        public RectTransform MainRect => _mainRect;
 
         public int Layer
         {
@@ -83,6 +86,7 @@ namespace UselessFrame.UIElements
             IUINode node = this;
             gameObject.name = node.Name;
             _transform = gameObject.GetComponent<RectTransform>();
+            _mainRect = _transform.Find("Rect")?.GetComponent<RectTransform>() ?? null;
         }
         #endregion
 
