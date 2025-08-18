@@ -146,6 +146,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5492410534477236588, guid: 8a777e3285157814cae5fbb01e28099a, type: 3}
+      propertyPath: frameworkSetting
+      value: 
+      objectReference: {fileID: 11400000, guid: ca5d47255c5b0eb45b8aff7db0534a01, type: 2}
     - target: {fileID: 5492410534477236590, guid: 8a777e3285157814cae5fbb01e28099a, type: 3}
       propertyPath: m_Name
       value: Framework

@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 using UnityXFrame.Core;
 using UnityXFrame.Core.Diagnotics;
 using UselessFrame.NewRuntime;
@@ -8,6 +9,7 @@ using UselessFrame.ResourceManager;
 using UselessFrame.Runtime;
 using UselessFrame.UIElements;
 using UselessFrameUnity.Attributes;
+using static UnityEngine.UI.CanvasScaler;
 
 namespace UselessFrameUnity
 {
@@ -15,6 +17,11 @@ namespace UselessFrameUnity
     {
         [SerializeField]
         private Canvas globalCanvas;
+
+        [SerializeField]
+        private FrameworkSetting frameworkSetting;
+
+        public FrameworkSetting Setting => frameworkSetting;
 
         private void Awake()
         {
@@ -25,7 +32,7 @@ namespace UselessFrameUnity
         {
             InitApplicationSetting();
             XSetting setting = new XSetting();
-            setting.Loggers = new[] { new UnityLogger() };
+            setting.Loggers = new[] { InitLogColorSetting() };
             setting.ModuleAttributes = new[]
             {
                 typeof(FrameModuleAttribute),
@@ -47,6 +54,18 @@ namespace UselessFrameUnity
             Application.targetFrameRate = refreshRate;
             QualitySettings.vSyncCount = 1;
         }
+
+        private UnityLogger InitLogColorSetting()
+        {
+            UnityLogger logger = new UnityLogger();
+            foreach (DebugColor colorData in frameworkSetting.LogMark)
+            {
+                if (colorData.Value)
+                    logger.Register(colorData.Key, colorData.Color);
+            }
+            return logger;
+        }
+
 
         private void Update()
         {
