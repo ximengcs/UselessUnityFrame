@@ -11,6 +11,7 @@ namespace TestGame
         protected override void OnInit(object param)
         {
             base.OnInit(param);
+            Debug.Log($"Test Module OnInit");
         }
 
         protected override async UniTask OnStart()
