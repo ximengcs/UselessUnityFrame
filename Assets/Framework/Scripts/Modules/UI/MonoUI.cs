@@ -108,7 +108,6 @@ namespace UselessFrame.UIElements
 
         void IUIGroupElement.OnInit(object userData)
         {
-            Debug.Log($"owner {_container.Owner == null}");
             _container.AddCom<UIComFinder>();
             OnInit(userData);
         }

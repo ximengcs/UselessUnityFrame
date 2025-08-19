@@ -1,5 +1,7 @@
 ﻿
 using UnityEngine;
+using UnityXFrame.Core.Diagnotics;
+using UselessFrame.NewRuntime;
 using UselessFrame.NewRuntime.ECS;
 
 
@@ -9,12 +11,12 @@ namespace TestGame
     {
         public void OnAwake(TransformView comp)
         {
-            Debug.Log($"TransformSystem OnAwake");
+            X.Log.Debug(LogSort.Game, $"TransformSystem OnAwake");
         }
         
         public void OnUpdate(TransformComponent oldComp, TransformComponent newComp)
         {
-            Debug.LogWarning($"TransformSystem OnUpdate {newComp.Entity.Id} {newComp.Position}");
+            X.Log.Debug(LogSort.Game, $"TransformSystem OnUpdate {newComp.Entity.Id} {newComp.Position}");
             Transform tf = newComp.Entity.GetComponent<TransformView>().Tf;
             tf.localPosition = new Vector3(newComp.Position.x, newComp.Position.y, newComp.Position.z);
         }

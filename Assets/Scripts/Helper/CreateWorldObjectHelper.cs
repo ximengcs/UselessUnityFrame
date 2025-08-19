@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityXFrame.Core.Diagnotics;
 using UselessFrame.NewRuntime;
 using UselessFrame.NewRuntime.ECS;
 using UselessFrame.Runtime.Types;
@@ -23,7 +24,7 @@ namespace TestGame
             {
                 var attr = (ComponentOfAttribute)X.Type.GetAttribute(type, typeof(ComponentOfAttribute));
                 _compViewMaps[attr.Type] = type;
-                Debug.LogWarning($"OnCreateComponent add {attr.Type.Name} {type.Name}");
+                X.Log.Debug(LogSort.Game, $"OnCreateComponent add {attr.Type.Name} {type.Name}");
             }
 
             _entityViewMaps = new Dictionary<Type, Type>();
@@ -32,7 +33,7 @@ namespace TestGame
             {
                 var attr = (EntityOfAttribute)X.Type.GetAttribute(type, typeof(EntityOfAttribute));
                 _entityViewMaps[attr.Type] = type;
-                Debug.LogWarning($"OnCreateEntity add {attr.Type.Name} {type.Name}");
+                X.Log.Debug(LogSort.Game, $"OnCreateEntity add {attr.Type.Name} {type.Name}");
             }
 
             _world = world;
@@ -42,7 +43,7 @@ namespace TestGame
 
         public void OnCreateEntity(Entity entity)
         {
-            X.Log.Debug($"OnCreateEntity {entity.GetType().Name} {entity.Scene == null} {entity.Id}");
+            X.Log.Debug(LogSort.Game, $"OnCreateEntity {entity.GetType().Name} {entity.Scene == null} {entity.Id}");
             if (_entityViewMaps.TryGetValue(entity.GetType(), out Type viewType))
             {
                 entity.GetOrAddComponent(viewType);
@@ -52,7 +53,7 @@ namespace TestGame
         public void OnCreateComponent(EntityComponent component)
         {
             if (component.Entity.IsDisposed) return;
-            X.Log.Debug($"OnCreateComponent {component.Entity.Id} {component.GetType().Name}");
+            X.Log.Debug(LogSort.Game, $"OnCreateComponent {component.Entity.Id} {component.GetType().Name}");
             if (_compViewMaps.TryGetValue(component.GetType(), out Type viewType))
             {
                 component.Entity.GetOrAddComponent(viewType);
@@ -67,7 +68,7 @@ namespace TestGame
         public void OnDestroyComponent(EntityComponent component)
         {
             if (component.Entity.IsDisposed) return;
-            X.Log.Debug($"OnDestroyComponent {component.GetHashCode()} {component.Entity.Id} {component.GetType().Name}");
+            X.Log.Debug(LogSort.Game, $"OnDestroyComponent {component.GetHashCode()} {component.Entity.Id} {component.GetType().Name}");
             if (_compViewMaps.TryGetValue(component.GetType(), out Type viewType))
             {
                 component.Entity.RemoveComponent(viewType);
@@ -76,7 +77,7 @@ namespace TestGame
 
         public void OnDestroyEntity(Entity entity)
         {
-            X.Log.Debug($"OnDestroyEntity {entity.GetType().Name} {entity.Id}");
+            X.Log.Debug(LogSort.Game, $"OnDestroyEntity {entity.GetType().Name} {entity.Id}");
         }
     }
 }

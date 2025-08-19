@@ -1,8 +1,9 @@
 ﻿
 namespace UnityXFrame.Core.Diagnotics
 {
-    internal enum UnityFrameworkLogType
+    public enum LogSort
     {
-        UI
+        UI,
+        Game
     }
 }

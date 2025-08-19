@@ -25,7 +25,6 @@ namespace UnityXFrameLib.UIElements
 
         protected async override void OnUIOpen(IUI ui, Action openCompleteCbk, CancellationToken cancellation)
         {
-            Debug.Log($"[State][Test]Open");
             KillClose(ui);
             m_Opening?.Close();
             if (m_CurOpenUI != ui)

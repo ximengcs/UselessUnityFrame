@@ -1,5 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityXFrame.Core.Diagnotics;
+using UselessFrame.NewRuntime;
 using UselessFrame.Runtime;
 using UselessFrameUnity.Attributes;
 
@@ -11,19 +13,18 @@ namespace TestGame
         protected override void OnInit(object param)
         {
             base.OnInit(param);
-            Debug.Log($"Test Module OnInit");
+            X.Log.Debug(LogSort.Game, $"Test Module OnInit");
         }
 
         protected override async UniTask OnStart()
         {
-            Debug.Log($"Test Module OnStart");
+            X.Log.Debug(LogSort.Game, $"Test Module OnStart");
             await UniTask.CompletedTask;
         }
 
-        protected override async UniTask OnDestroy()
+        protected override void OnDestroy()
         {
-            Debug.Log($"Test Module OnDestroy");
-            await UniTask.CompletedTask;
+            X.Log.Debug(LogSort.Game, $"Test Module OnDestroy");
         }
 
         public void OnUpdate(float detalTime)

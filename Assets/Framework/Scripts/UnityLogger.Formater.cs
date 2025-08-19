@@ -48,9 +48,10 @@ namespace UnityXFrame.Core.Diagnotics
                 if (content.Length > MAX_LENGTH)
                     content = content.Substring(0, MAX_LENGTH);
                 if (!string.IsNullOrEmpty(name))
-                    content = $"<color=#00FFFF>[{name}]</color> <color=#{colorHex}>{content}</color>";
+                    content = $"<color=#00FFFF> [{name}] </color> <color=#{colorHex}> {content} </color>";
                 else
-                    content = $"<color=#{colorHex}>{content}</color>";
+                    content = $"<color=#{colorHex}> {content} </color> ";
+                content = content.Replace("\n", $"</color>\n<color=#{colorHex}>");
                 result = content;
             }
         }

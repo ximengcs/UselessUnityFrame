@@ -32,6 +32,7 @@ namespace UselessFrameUnity
         {
             InitApplicationSetting();
             XSetting setting = new XSetting();
+            setting.TypeFilter = new TypeFilter();
             setting.Loggers = new[] { InitLogColorSetting() };
             setting.ModuleAttributes = new[]
             {

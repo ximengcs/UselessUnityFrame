@@ -40,7 +40,6 @@ namespace UselessFrame.UIElements
 
         async UniTask<IPoolObject> IPoolHelper.FactoryAsync(Type type, int poolKey)
         {
-            Debug.Log($"factory async {type.Name} {poolKey}");
             int useResModule = poolKey;
             string uiPath = InnerUIPath(type);
             GameObject prefab = await X.Module.Get<ResourceModule>().LoadAsync<GameObject>(uiPath);

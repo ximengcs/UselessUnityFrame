@@ -1,5 +1,7 @@
 ﻿
 using UnityEngine;
+using UnityXFrame.Core.Diagnotics;
+using UselessFrame.NewRuntime;
 using UselessFrame.NewRuntime.ECS;
 
 namespace TestGame
@@ -14,7 +16,7 @@ namespace TestGame
         protected override void OnInit()
         {
             base.OnInit();
-            Debug.Log($"entity view init {$"{GetType().Name}-{Entity.Id}"}");
+            X.Log.Debug(LogSort.Game, $"entity view init {$"{GetType().Name}-{Entity.Id}"}");
             _inst = new GameObject($"{GetType().Name}-{Entity.Id}");
         }
     }
