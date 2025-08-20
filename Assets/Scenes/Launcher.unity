@@ -123,6 +123,16 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!20 &295208154 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 7733695871937885297, guid: 8a777e3285157814cae5fbb01e28099a, type: 3}
+  m_PrefabInstance: {fileID: 1524382413}
+  m_PrefabAsset: {fileID: 0}
+--- !u!20 &632064962 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 5995772583796070670, guid: 8a777e3285157814cae5fbb01e28099a, type: 3}
+  m_PrefabInstance: {fileID: 1524382413}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1524382413
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -130,6 +140,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 519420030, guid: 8a777e3285157814cae5fbb01e28099a, type: 3}
+      propertyPath: m_Cameras.Array.data[0]
+      value: 
+      objectReference: {fileID: 295208154}
+    - target: {fileID: 519420030, guid: 8a777e3285157814cae5fbb01e28099a, type: 3}
+      propertyPath: m_Cameras.Array.data[1]
+      value: 
+      objectReference: {fileID: 632064962}
     - target: {fileID: 4397458322917909121, guid: 8a777e3285157814cae5fbb01e28099a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

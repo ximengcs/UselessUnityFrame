@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading;
 using UnityEngine;
-using UselessFrame.NewRuntime;
-using UselessFrame.NewRuntime.Fiber;
 
 namespace UnityXFrame.Core.Diagnotics
 {
@@ -22,6 +20,7 @@ namespace UnityXFrame.Core.Diagnotics
             m_Formater.Register(name, color);
         }
 
+        [HideInCallstack]
         public void Debug(params object[] content)
         {
             if (InnerFormat(out string result, content) || !m_MustRegister)
@@ -30,6 +29,7 @@ namespace UnityXFrame.Core.Diagnotics
             }
         }
 
+        [HideInCallstack]
         public void Error(params object[] content)
         {
             if (InnerFormat(out string result, content) || !m_MustRegister)
@@ -38,6 +38,7 @@ namespace UnityXFrame.Core.Diagnotics
             }
         }
 
+        [HideInCallstack]
         public void Fatal(params object[] content)
         {
             if (InnerFormat(out string result, content) || !m_MustRegister)
@@ -46,6 +47,7 @@ namespace UnityXFrame.Core.Diagnotics
             }
         }
 
+        [HideInCallstack]
         public void Warning(params object[] content)
         {
             if (InnerFormat(out string result, content) || !m_MustRegister)
@@ -88,6 +90,7 @@ namespace UnityXFrame.Core.Diagnotics
             }
         }
 
+        [HideInCallstack]
         public void Exception(Exception e)
         {
             UnityEngine.Debug.LogException(e);

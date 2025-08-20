@@ -64,9 +64,9 @@ namespace UnityXFrameLib.UIElements
 
         private CanvasGroup InnerEnsureCanvasGroup(IUI ui)
         {
-            CanvasGroup canvasGroup = ui.RootRect.GetComponent<CanvasGroup>();
+            CanvasGroup canvasGroup = ui.MainRect.GetComponent<CanvasGroup>();
             if (canvasGroup == null)
-                canvasGroup = ui.RootRect.gameObject.AddComponent<CanvasGroup>();
+                canvasGroup = ui.MainRect.gameObject.AddComponent<CanvasGroup>();
             canvasGroup.alpha = m_Start;
             return canvasGroup;
         }

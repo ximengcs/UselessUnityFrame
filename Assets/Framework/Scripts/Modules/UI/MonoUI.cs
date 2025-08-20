@@ -20,7 +20,7 @@ namespace UselessFrame.UIElements
         #region IUI Interface
         public RectTransform RootRect => _transform;
 
-        public RectTransform MainRect => _mainRect;
+        public virtual RectTransform MainRect => _mainRect;
 
         public int Layer
         {

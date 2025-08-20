@@ -9,7 +9,6 @@ using UselessFrame.ResourceManager;
 using UselessFrame.Runtime;
 using UselessFrame.UIElements;
 using UselessFrameUnity.Attributes;
-using static UnityEngine.UI.CanvasScaler;
 
 namespace UselessFrameUnity
 {
@@ -31,7 +30,14 @@ namespace UselessFrameUnity
         private async void Start()
         {
             InitApplicationSetting();
+            await X.Initialize(InitFrameSetting());
+            X.Module.AddHandler<UpdateHandler>();
+        }
+
+        private XSetting InitFrameSetting()
+        {
             XSetting setting = new XSetting();
+            setting.Log = new UnityLogManager(null);
             setting.TypeFilter = new TypeFilter();
             setting.Loggers = new[] { InitLogColorSetting() };
             setting.ModuleAttributes = new[]
@@ -45,8 +51,7 @@ namespace UselessFrameUnity
                 ValueTuple.Create(typeof(UIModule), globalCanvas),
             };
             setting.EntranceProcedure = "TestGame.TestProcedure";
-            await X.Initialize(setting);
-            X.Module.AddHandler<UpdateHandler>();
+            return setting;
         }
 
         private void InitApplicationSetting()

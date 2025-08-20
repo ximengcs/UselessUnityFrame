@@ -16,7 +16,7 @@ namespace TestGame
             IUIGroup mainGroup = G.UI.GetOrNewGroup("Main");
             OnlyOneUIGroupHelper groupHelper = mainGroup.AddHelper<OnlyOneUIGroupHelper>();
             groupHelper.SetMatchMode(UIGroupHelperInEffect.MatchUIMode.Exclude);
-            groupHelper.SetEffect(new ScaleEffect(Vector2.zero, Vector2.one, 1f), new ScaleEffect(Vector2.one, Vector2.zero, 1f));
+            groupHelper.SetEffect(new MoveEffect(MoveEffect.Direct.FromTop, true, false, 1), new MoveEffect(MoveEffect.Direct.FromTop, false, false, 1));
 
             IUIGroup testGroup = G.UI.GetOrNewGroup("Test");
             OnlyOneUIGroupHelper testHelper = testGroup.AddHelper<OnlyOneUIGroupHelper>();

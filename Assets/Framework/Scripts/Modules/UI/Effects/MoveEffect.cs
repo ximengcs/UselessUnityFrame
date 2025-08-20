@@ -28,12 +28,12 @@ namespace UnityXFrameLib.UIElements
         private bool m_CompleteReset;
         private Dictionary<int, Tween> m_Anims;
 
-        public MoveEffect(Direct direct, bool open, bool completeRest, float duration = 0.2f)
+        public MoveEffect(Direct direct, bool open, bool completeReset, float duration = 0.2f)
         {
             m_IsOpen = open;
             m_Direct = direct;
             m_Dur = duration;
-            m_CompleteReset = completeRest;
+            m_CompleteReset = completeReset;
             m_Anims = new Dictionary<int, Tween>();
         }
 
@@ -53,22 +53,22 @@ namespace UnityXFrameLib.UIElements
             switch (direct)
             {
                 case Direct.FromLeft:
-                    start = new Vector2(-ui.RootRect.sizeDelta.x, 0);
+                    start = new Vector2(-ui.MainRect.sizeDelta.x, 0);
                     end = Vector2.zero;
                     break;
 
                 case Direct.FromRight:
-                    start = new Vector2(ui.RootRect.sizeDelta.x, 0);
+                    start = new Vector2(ui.MainRect.sizeDelta.x, 0);
                     end = Vector2.zero;
                     break;
 
                 case Direct.FromTop:
-                    start = new Vector2(0, ui.RootRect.sizeDelta.y);
+                    start = new Vector2(0, ui.MainRect.sizeDelta.y);
                     end = Vector2.zero;
                     break;
 
                 case Direct.FromBottom:
-                    start = new Vector2(0, -ui.RootRect.sizeDelta.y);
+                    start = new Vector2(0, -ui.MainRect.sizeDelta.y);
                     end = Vector2.zero;
                     break;
 
@@ -85,9 +85,9 @@ namespace UnityXFrameLib.UIElements
                 end = tmp;
             }
 
-            ui.RootRect.anchoredPosition = start;
+            ui.MainRect.anchoredPosition = start;
 
-            Tween tween = ui.RootRect.DOAnchoredPos(end, m_Dur);
+            Tween tween = ui.MainRect.DOAnchoredPos(end, m_Dur);
             m_Anims.Add(key, tween);
             AutoResetUniTaskCompletionSource taskSource = AutoResetUniTaskCompletionSource.Create();
             tween.OnComplete(() => taskSource.TrySetResult());
@@ -97,7 +97,7 @@ namespace UnityXFrameLib.UIElements
             {
                 tween.OnKill(() =>
                 {
-                    ui.RootRect.anchoredPosition = start;
+                    ui.MainRect.anchoredPosition = start;
                 });
             }
             return !token.IsCancellationRequested;
