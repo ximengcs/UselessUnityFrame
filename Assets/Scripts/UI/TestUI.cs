@@ -7,6 +7,7 @@ using Cysharp.Threading.Tasks;
 using UselessFrame.NewRuntime;
 using UselessFrame.NewRuntime.ECS;
 using TMPro;
+using DG.Tweening;
 
 namespace TestGame
 {
