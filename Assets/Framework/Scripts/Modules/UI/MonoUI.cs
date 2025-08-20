@@ -18,6 +18,8 @@ namespace UselessFrame.UIElements
         protected RectTransform _transform;
 
         #region IUI Interface
+        public IUIHandle Handle => _handle;
+
         public RectTransform RootRect => _transform;
 
         public virtual RectTransform MainRect => _mainRect;

@@ -5,6 +5,8 @@ namespace UselessFrame.UIElements
 {
     public interface IUI : IContainer<IUI>
     {
+        IUIHandle Handle { get; }
+
         RectTransform RootRect { get; }
 
         RectTransform MainRect { get; }
