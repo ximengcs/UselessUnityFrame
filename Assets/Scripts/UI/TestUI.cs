@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using TMPro;
-using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.UI;
 using UselessFrame.Net;
