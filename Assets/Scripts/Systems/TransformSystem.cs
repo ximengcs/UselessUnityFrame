@@ -1,4 +1,5 @@
 ﻿
+using DG.Tweening;
 using UnityEngine;
 using UnityXFrame.Core.Diagnotics;
 using UselessFrame.NewRuntime;
@@ -18,7 +19,7 @@ namespace TestGame
         {
             X.Log.Debug(LogSort.Game, $"TransformSystem OnUpdate {newComp.Entity.Id} {newComp.Position}");
             Transform tf = newComp.Entity.GetComponent<TransformView>().Tf;
-            tf.localPosition = new Vector3(newComp.Position.x, newComp.Position.y, newComp.Position.z);
+            tf.DOLocalMove(new Vector3(newComp.Position.x, newComp.Position.y, newComp.Position.z), 0.2f);
         }
     }
 }

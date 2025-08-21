@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Linq;
+using TMPro;
 using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,7 +24,23 @@ namespace TestGame
         [SerializeField]
         private Image background;
 
+        [SerializeField]
+        private GameObject operateRect;
+
+        [SerializeField]
+        private Button upBtn;
+
+        [SerializeField]
+        private Button downBtn;
+
+        [SerializeField]
+        private Button leftBtn;
+
+        [SerializeField]
+        private Button rightBtn;
+
         private World _world;
+        private Entity _entity;
 
         protected override void OnInit(object userData)
         {
@@ -32,6 +49,46 @@ namespace TestGame
             background.enabled = true;
             connectBtn.gameObject.SetActive(true);
             connectBtn.onClick.AddListener(ConnectHandler);
+            leftBtn.onClick.AddListener(MoveLeftHandler);
+            rightBtn.onClick.AddListener(MoveRightHandler);
+            upBtn.onClick.AddListener(MoveUpHandler);
+            downBtn.onClick.AddListener(MoveDownHandler);
+        }
+
+        private void MoveLeftHandler()
+        {
+            Move(new Vector2(-1, 0));
+        }
+
+        private void MoveRightHandler()
+        {
+            Move(new Vector2(1, 0));
+        }
+
+        private void MoveUpHandler()
+        {
+            Move(new Vector2(0, 1));
+        }
+
+        private void MoveDownHandler()
+        {
+            Move(new Vector2(0, -1));
+        }
+
+        private void Move(Vector2 offset)
+        {
+            if (_entity == null)
+            {
+                _entity = _world.Scenes.First().Entities.First();
+            }
+            MoveMessage message = new MoveMessage()
+            {
+                Scene = _entity.Scene.Id,
+                Entity = _entity.Id,
+                DirectionX = offset.x,
+                DirectionY = offset.y,
+            };
+            _world.Trigger(message);
         }
 
         private void ConnectHandler()
