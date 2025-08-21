@@ -44,14 +44,31 @@ namespace TestGame
         protected override void OnInit(object userData)
         {
             base.OnInit(userData);
-            latencyObj.SetActive(false);
-            background.enabled = true;
-            connectBtn.gameObject.SetActive(true);
+            SetShowState(false);
             connectBtn.onClick.AddListener(ConnectHandler);
             leftBtn.onClick.AddListener(MoveLeftHandler);
             rightBtn.onClick.AddListener(MoveRightHandler);
             upBtn.onClick.AddListener(MoveUpHandler);
             downBtn.onClick.AddListener(MoveDownHandler);
+        }
+
+        private void SetShowState(bool connect)
+        {
+            if (connect)
+            {
+                latencyObj.SetActive(true);
+                background.enabled = false;
+                connectBtn.gameObject.SetActive(false);
+                operateRect.SetActive(true);
+                
+            }
+            else
+            {
+                latencyObj.SetActive(false);
+                background.enabled = true;
+                connectBtn.gameObject.SetActive(true);
+                operateRect.SetActive(false);
+            }
         }
 
         private void MoveLeftHandler()
@@ -92,11 +109,9 @@ namespace TestGame
 
         private void ConnectHandler()
         {
-            _world = X.World.Create(WorldSetting.Client(8888));
+            _world = X.World.Create(WorldSetting.Client("8.137.158.164", 8888));
             _world.SetHelper(new CreateWorldObjectHelper());
-            latencyObj.SetActive(true);
-            background.enabled = false;
-            connectBtn.gameObject.SetActive(false);
+            SetShowState(true);
             RefreshLentency(0);
             CheckLentency();
         }
