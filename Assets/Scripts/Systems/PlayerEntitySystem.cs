@@ -4,20 +4,19 @@ using UselessFrame.NewRuntime.ECS;
 
 namespace TestGame
 {
-    internal class SceneViewSystem : IAwakeSystem<SceneView>, IDestroySystem<SceneView>
+    internal class PlayerEntitySystem : IAwakeSystem<PlayerEntityView>, IDestroySystem<PlayerEntityView>
     {
-        public void OnAwake(SceneView comp)
+        public void OnAwake(PlayerEntityView comp)
         {
             Entity parent = comp.Entity.Parent;
             if (parent != null)
             {
                 EntityView parentView = parent.GetComponent<EntityView>();
-                Debug.Log($"SceneViewSystem {parentView == null} {parent.GetType().Name} {parent.GetHashCode()}");
                 comp.GameObject.transform.SetParent(parentView.GameObject.transform);
             }
         }
 
-        public void OnDestroy(SceneView comp)
+        public void OnDestroy(PlayerEntityView comp)
         {
             GameObject.Destroy(comp.GameObject);
         }

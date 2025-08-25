@@ -12,9 +12,10 @@ namespace TestGame
     public class CreateWorldObjectHelper : IEntityHelper
     {
         private World _world;
-        private WorldView _view;
         private Dictionary<Type, Type> _compViewMaps;
         private Dictionary<Type, Type> _entityViewMaps;
+
+        public World World => _world;
 
         public void Bind(World world)
         {
@@ -37,16 +38,16 @@ namespace TestGame
             }
 
             _world = world;
-            _view = new WorldView();
-            _world.AttachComponent(_view);
         }
 
         public void OnCreateEntity(Entity entity)
         {
-            X.Log.Debug(LogSort.Game, $"OnCreateEntity {entity.GetType().Name} {entity.Scene == null} {entity.Id}");
+            X.Log.Debug(LogSort.Game, $"OnCreateEntity {entity.GetType().Name} {entity.Scene == null} {entity.Id} {entity.GetHashCode()}");
             if (_entityViewMaps.TryGetValue(entity.GetType(), out Type viewType))
             {
+                X.Log.Debug(LogSort.Game, $"OnCreateEntity add view component1 {viewType.Name}");
                 entity.GetOrAddComponent(viewType);
+                X.Log.Debug(LogSort.Game, $"OnCreateEntity add view component2 {viewType.Name} {entity.GetHashCode()} {entity.GetComponent<EntityView>()}");
             }
         }
 

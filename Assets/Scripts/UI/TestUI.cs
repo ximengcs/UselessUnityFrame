@@ -109,7 +109,8 @@ namespace TestGame
 
         private void ConnectHandler()
         {
-            _world = X.World.Create(WorldSetting.Client("8.137.158.164", 8888));
+            _world = X.World.Create(WorldSetting.Client(8888));
+            //_world = X.World.Create(WorldSetting.Client("8.137.158.164", 8888));
             _world.SetHelper(new CreateWorldObjectHelper());
             SetShowState(true);
             RefreshLentency(0);

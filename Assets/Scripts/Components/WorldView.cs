@@ -1,4 +1,5 @@
 ﻿
+using UselessFrame.NewRuntime;
 using UselessFrame.NewRuntime.ECS;
 
 namespace TestGame
