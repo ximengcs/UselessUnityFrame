@@ -11,6 +11,8 @@ namespace TestGame
         {
             base.OnInit();
             GameObject.name = $"Player-{Entity.Id}";
+            var render = GameObject.AddComponent<SpriteRenderer>();
+            render.sprite = Resources.Load<Sprite>("square");
         }
     }
 }

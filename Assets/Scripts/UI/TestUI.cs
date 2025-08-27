@@ -39,7 +39,6 @@ namespace TestGame
         private Button rightBtn;
 
         private World _world;
-        private Entity _entity;
 
         protected override void OnInit(object userData)
         {
@@ -60,7 +59,7 @@ namespace TestGame
                 background.enabled = false;
                 connectBtn.gameObject.SetActive(false);
                 operateRect.SetActive(true);
-                
+
             }
             else
             {
@@ -93,18 +92,22 @@ namespace TestGame
 
         private void Move(Vector2 offset)
         {
-            if (_entity == null)
+            PlayerEntity player = PlayerIdSystem.Player;
+            if (player != null)
             {
-                _entity = _world.Scenes.First().Entities.First();
+                MoveMessage message = new MoveMessage()
+                {
+                    Scene = player.Scene?.Id ?? 0,
+                    Entity = player.Id,
+                    DirectionX = offset.x,
+                    DirectionY = offset.y,
+                };
+                _world.Trigger(message);
             }
-            MoveMessage message = new MoveMessage()
+            else
             {
-                Scene = _entity.Scene.Id,
-                Entity = _entity.Id,
-                DirectionX = offset.x,
-                DirectionY = offset.y,
-            };
-            _world.Trigger(message);
+                X.Log.Debug($"player is null");
+            }
         }
 
         private void ConnectHandler()
